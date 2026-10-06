@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Shayan</h1>
+    <form action="articles/">
+        <input type="text" name="query"/>
+        <input type="submit"/>
+    </form>
+    {% block content %}
+        <h3>This is replacement</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.c</p>
+    {% endblock content %}
+</body>
+</html>
