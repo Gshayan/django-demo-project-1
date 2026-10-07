@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .models import Articles
+from .forms import ArticleForm
 # from django.http import HttpResponse
 
 def article_search_view(requests):
@@ -20,15 +21,39 @@ def article_search_view(requests):
     }
     return render(requests, "articles/search.html", context=context)
 
+# @login_required
+# def article_create_view(requests):
+    
+#     form = ArticleForm()
+#     context = {
+#         "form": form
+#     }
+#     if requests.method=="POST":
+#         form = ArticleForm(requests.POST)
+#         context["form"] = form
+#         if form.is_valid():
+#             title = form.cleaned_data.get("title")
+#             content = form.cleaned_data.get("content") 
+#             obj = Articles.objects.create(title=title, content=content)
+#             context['object'] = obj
+#             context['created'] = True
+#     return render(requests, "articles/create.html", context=context)
+
 @login_required
 def article_create_view(requests):
-    context = {}
-    if requests.method=="POST":
-        title = requests.POST.get("title")
-        content = requests.POST.get("content")
-        obj = Articles.objects.create(title=title, content=content)
-        context['object'] = obj
-        context['created'] = True
+    
+    form = ArticleForm(requests.POST or None)
+    context = {
+        "form": form
+    }
+    if form.is_valid():
+        obj = form.save()
+        context["form"] = ArticleForm()
+        # title = form.cleaned_data.get("title")
+        # content = form.cleaned_data.get("content") 
+        # obj = Articles.objects.create(title=title, content=content)
+        # context['object'] = obj
+        # context['created'] = True
     return render(requests, "articles/create.html", context=context)
 
 def article_view(requests, id=None):
