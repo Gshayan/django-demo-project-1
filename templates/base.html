@@ -8,7 +8,7 @@
 <body>
     <h1>Shayan</h1>
     <div style="margin: 20px;">
-        <form action="articles/">
+        <form action='{% url "article-search" %}'>
             <input type="text" name="query"/>
             <input type="submit"/>
         </form>

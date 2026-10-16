@@ -19,3 +19,5 @@ def slugify_instance_title(instance, count=1, original_slug=None, save=False, ne
     instance.slug = slug
     if save:
         instance.save()
+
+    return instance

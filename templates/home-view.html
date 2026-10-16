@@ -3,9 +3,10 @@
 {% block content %}
 <h1>Hello, or H {{title}}! (ID = {{id}})</h1>
 <p>Content: {{content}}</p>
+<a href='{% url "article-create" %}''>Create Article</a>
 <ul>
     {% for obj in object_list %}
-    <li><a href="/articles/{{obj.id}}/">{{obj}}</li>
+    <li><a href="{{obj.get_real_url}}">{{obj.title}}</li>
     {% endfor %}
 </ul>
 {% endblock content %} 
