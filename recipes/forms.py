@@ -16,7 +16,11 @@ class RecipeForm(forms.ModelForm):
         for field in self.fields:
             dict = {
                 "placeholder": f"Recipe {str(field)}",
-                "class": "form-control-2"
+                "class": "form-control-2",
+                # "hx-post": ".",
+                # "hx-trigger": "keyup changed delay:500ms",
+                # "hx-target": "#recipe-container",
+                # "hx-swap": "outerHTML"
             }
             self.fields[str(field)].widget.attrs.update(dict)
         self.fields["description"].widget.attrs.update({"rows": "2"})

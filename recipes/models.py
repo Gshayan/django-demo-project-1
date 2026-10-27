@@ -4,6 +4,24 @@ from .validators import valid_units_check
 from .utils import number_str_to_float
 from django.urls import reverse
 import pint
+from django.db.models import Q
+
+
+
+class RecipesQuerySet(models.QuerySet):
+    def search(self, query=None):
+        if query is None or query == "":
+            return self.get_queryset().none()
+        lookups = Q(name__icontains=query) | Q(description__icontains=query) | Q(directions__icontains=query)
+        return self.filter(lookups)
+
+class RecipesManager(models.Manager):
+    def get_queryset(self):
+        return RecipesQuerySet(self.model, using=self._db)
+    
+    def search(self, query=None):  
+        return self.get_queryset().search(query=query)
+
 
 class Recipe(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -14,8 +32,20 @@ class Recipe(models.Model):
     updated = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
 
+    objects = RecipesManager()
+
+    @property
+    def title(self):
+        return self.name
+
     def get_detail_url(self):
         return reverse('recipes:detail', kwargs={"id":self.id})
+
+    def get_delete_url(self):
+        return reverse('recipes:delete', kwargs={"id":self.id})
+
+    def get_real_url(self):
+            return reverse('recipes:detail', kwargs={"id":self.id})
 
     def get_hx_url(self):
         return reverse('recipes:hx-detail', kwargs={"id":self.id})
@@ -25,6 +55,7 @@ class Recipe(models.Model):
 
     def get_ingredient_list(self):
         return self.recipeingredient_set.all()
+
 
 class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
@@ -41,6 +72,20 @@ class RecipeIngredient(models.Model):
 
     def get_real_url(self):
         return self.recipe.get_detail_url()
+
+    def get_delete_url(self):
+        kwargs={
+            "parent_id": self.recipe.id,
+            "id": self.id
+        }
+        return reverse("recipes:ingredient-delete", kwargs=kwargs)
+
+    def get_hx_edit_url(self):
+        kwargs={
+            "parent_id": self.recipe.id,
+            "id": self.id
+        }
+        return reverse("recipes:hx-ingredient-update", kwargs=kwargs)
 
     def change_system_units(self, system="mks"):
         if self.quantity_as_float is None:
@@ -67,5 +112,3 @@ class RecipeIngredient(models.Model):
 
         super().save(*args, **kwargs)
     
-
-

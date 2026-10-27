@@ -32,6 +32,10 @@ class Articles(models.Model):
     published = models.DateField(auto_now_add=False, auto_now=False, null=True, blank=True)
     objects = ArticlesManager()
 
+    @property
+    def name(self):
+        return self.title
+
     def get_real_url(self):
         return reverse("articles:detail", kwargs={"slug": self.slug})
 

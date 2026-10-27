@@ -12,15 +12,18 @@
     }
 </style>
 
-{% if message %}
-
-<p>{{message}}</p>
-
-{% endif %}
-
 <div style="margin-top: 30px;">
     {% include "recipes/partials/forms.html" %}
+    <h3>Ingredients</h3>
+    {% for ingredient in object.get_ingredient_list %}
+        {% include "recipes/partials/ingredient-inline.html" with object=ingredient %}
+    {% endfor %}
+    {% if new_ingredient_url %}
+        <div id="create-ingredient"></div>
+        <button hx-trigger="click" hx-get="{{new_ingredient_url}}" hx-target="#create-ingredient" hx-swap="beforeend">Add More</button>
+    {% endif %}
 </div>
+
 <script>
     // const addMoreBtn = document.getElementById("add-more")
     document.addEventListener("click", (event)=>{

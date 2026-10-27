@@ -1,34 +1,21 @@
-<form action="." method="POST" hx-post="." hx-swap="outerHTML">
-    {% csrf_token %}
-    {% for field in form %}
-    <div class='{% if field.field.required %}{{form.required_css_class}}{%endif%}'>
-        {{field.label_tag}}{{field}}
-        {%if field.help_text %}
-        <p>
-            <a href="/forget-name">{{field.help_text|safe}}</a>
-        </p>    
-        {% endif %}
-    </div>
-    {%endfor%}
-    
-    <!-- {{form.as_p}} -->
-    {% if formset %}
-        <h2>Ingredients</h2>
-        <!-- {{formset.as_p}} -->
-        {{formset.management_form}}
-        <div id="ingredient-form-list">
-            {% for form in formset %}
-            <div class="recipeingredientform-class">
-                {{form.as_p}}
-            </div>
-            {% endfor %}
+<div id="recipe-container">
+    <form action="." method="POST" hx-post="." hx-swap="outerHTML" hx-trigger="{% if form.instance.id %}change delay:500ms,{% endif %} submit">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class='{% if field.field.required %}{{form.required_css_class}}{%endif%}'>
+            {{field.label_tag}}{{field}}
+            {%if field.help_text %}
+            <p>
+                <a href="/forget-name">{{field.help_text|safe}}</a>
+            </p>    
+            {% endif %}
         </div>
-        <div id="empty-form" class="hidden">{{formset.empty_form.as_p}}</div>
+        {%endfor%}
+        <div class="htmx-indicator">Loading....</div>
+        <button class="htmx-inverted-indicator" type="submit">Save</button>
         {% if message %}
-            <p>{{message}}</p>
+        <p>{{message}}</p> 
         {% endif %}
-        <button id="add-more" type="button">Add More</button>
-    {% endif %}
-    <div class="htmx-indicator">Loading....</div>
-    <button class="htmx-inverted-indicator" type="submit">Save</button>
-</form>
+        <a href='{{object.get_delete_url}}'>delete</a>
+    </form>
+</div>

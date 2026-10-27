@@ -1,4 +1,14 @@
-<H1>{{object.name}} {% if object.get_edit_url %}<a href='{{object.get_edit_url}}'>edit</a>{% endif %}</H1>
+<H1>{{object.name}}</H1>
+{% if object.get_edit_url %}
+<small>
+    <a href='{{object.get_edit_url}}'>edit</a>
+    <a href='{{object.get_delete_url}}' hx-post="{{object.get_delete_url}}" 
+        hx-confirm="Are you sure, you wanna delete {{object.name}}"
+        hx-trigger="click"
+        >delete</a>
+</small>    
+{% endif %}
+
 <p>Author: {{object.user.username}}</p>
 <p>{{object.description}}</p>
 <p>{{object.directions}}</p>
