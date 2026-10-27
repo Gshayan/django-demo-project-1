@@ -1,0 +1,10 @@
+<H1>{{object.name}} {% if object.get_edit_url %}<a href='{{object.get_edit_url}}'>edit</a>{% endif %}</H1>
+<p>Author: {{object.user.username}}</p>
+<p>{{object.description}}</p>
+<p>{{object.directions}}</p>
+
+{% for ingredient in object.get_ingredient_list %}
+    <h2>{{ingredient.name}}</h2>
+    <h3>{{ingredient.as_mks}}</h3>
+    <h3>{{ingredient.as_imperial}}</h3>
+{% endfor %}

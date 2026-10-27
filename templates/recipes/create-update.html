@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<style>
+    .recipeingredientform-class{
+        border-bottom: 1px solid black;
+    }
+    .hidden{
+        display: none;
+    }
+</style>
+
+{% if message %}
+
+<p>{{message}}</p>
+
+{% endif %}
+
+<div style="margin-top: 30px;">
+    {% include "recipes/partials/forms.html" %}
+</div>
+<script>
+    // const addMoreBtn = document.getElementById("add-more")
+    document.addEventListener("click", (event)=>{
+        if(event.target.id=="add-more"){
+            add_new_form(event)
+        }
+    })
+    // addMoreBtn.addEventListener("click", add_new_form)
+    function add_new_form(event){
+        if(event){
+            event.preventDefault()
+        }
+        const totalNewForms = document.getElementById("id_form-TOTAL_FORMS")
+        const currentTotalIngredientForms = document.getElementsByClassName("recipeingredientform-class")
+        const currentIngredientFormCount = currentTotalIngredientForms.length
+
+        const emptyFormElement = document.getElementById("empty-form").cloneNode(true)
+        emptyFormElement.setAttribute("class", "recipeingredientform-class")
+        // emptyFormElement.setAttribute("id", "")
+        emptyFormElement.setAttribute("id", 'form-${currentIngredientFormCount}')
+        const ingredientFormList = document.getElementById("ingredient-form-list")
+        const regex = new RegExp("__prefix__", "g")
+        emptyFormElement.innerHTML = emptyFormElement.innerHTML.replace(regex, currentIngredientFormCount)
+        totalNewForms.setAttribute("value", currentIngredientFormCount+1)
+        ingredientFormList.append(emptyFormElement)
+    }
+</script>
+
+{% endblock content %}

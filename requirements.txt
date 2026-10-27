@@ -1,4 +1,6 @@
 django=6.1.1
-django-dotenv
-gunicorn
-psycopg2-binary
+django-dotenv==1.4.2
+django-htmx==1.29.0
+# gunicorn
+# psycopg2-binary
+Pint==0.26.2

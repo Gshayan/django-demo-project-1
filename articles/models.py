@@ -1,8 +1,11 @@
 from django.db import models
+from django.conf import settings
 from django.db.models.signals import pre_save, post_save
 from .utils import slugify_instance_title
 from django.urls import reverse
 from django.db.models import Q
+
+User = settings.AUTH_USER_MODEL
 
 class ArticlesQuerySet(models.QuerySet):
     def search(self, query=None):
@@ -20,6 +23,7 @@ class ArticlesManager(models.Manager):
         return self.get_queryset().search(query=query)
 
 class Articles(models.Model):
+    user = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
     title = models.CharField(max_length=100)
     slug = models.SlugField(unique=True, blank=True, null=True)
     content = models.TextField()
@@ -29,7 +33,10 @@ class Articles(models.Model):
     objects = ArticlesManager()
 
     def get_real_url(self):
-        return reverse("article-detail", kwargs={"slug": self.slug})
+        return reverse("articles:detail", kwargs={"slug": self.slug})
+
+    # def get_search_url(self):
+    #         return reverse("article:search", kwargs={})
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
